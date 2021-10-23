@@ -5,6 +5,29 @@ function Node(letter, freq, used, father, code) {
 	this.father = father;
 	this.code = code;
 }
+
+function FindCode(node) {
+	if (node.code != '') {
+		return 0;
+	}
+	if (tree[node.father].code != '') {
+		node.code = tree[node.father].code + '1';
+	} else {
+		if (node.letter == tree[mini_index].letter) {
+			node.code = '0';
+		} else if (node.letter == tree[premini_index].letter) {
+			node.code = '1';
+		} else {
+			FindCode(tree[node.father]);
+			node.code = tree[node.father].code + '0';
+		}
+	}
+}
+
+
+
+
+
 let fs = require("fs");
 let arg = process.argv;
 let answer = '';
@@ -43,35 +66,35 @@ if (count == 1) {
 	tree[mini_index].father = count;
 	tree[premini_index].used = true;
 	tree[premini_index].father = count;
+	let countNode;
+	countNode = count + 1;
 	for (let i = 0; i < count - 2; i++) {
-		let mini = Number.POSITIVE_INFINITY;
-		let mini_index = 0;
-		for (let j = 0; j < count; j++) {
+		mini = Number.POSITIVE_INFINITY;
+		premini = Number.POSITIVE_INFINITY;
+		mini_index = 0;
+		premini_index = 0;
+		for (let j = 0; j < countNode; j++) {
 			if (!tree[j].used && tree[j].freq <= mini) {
+				premini = mini;
+				premini_index = mini_index;
 				mini = tree[j].freq;
 				mini_index = j;
+			} else if (!tree[j].used && tree[j].freq <= premini) {
+				premini = tree[j].freq;
+				premini_index = j;
 			}
 		}
-		let n = new Node(tree[mini_index].letter + tree[count + i].letter, tree[count + i].freq + tree[mini_index].freq, false, null, '');
+		countNode++;
+		let n = new Node(tree[mini_index].letter + tree[premini_index].letter, tree[mini_index].freq + tree[premini_index].freq, false, null, '');
 		tree.push(n);
-		tree[count + i].used = true;
-		tree[count + i].father = count + i + 1;
+		tree[premini_index].used = true;
+		tree[premini_index].father = countNode - 1;
 		tree[mini_index].used = true;
-		tree[mini_index].father = count + i + 1;
+		tree[mini_index].father = countNode - 1;
 	}
-	for (let i = 2 * count - 3; i >= count; i--) {
-		tree[i].code = tree[tree[i].father].code + '1';
+	for (let i = 0; i < count; i++) {
+		FindCode(tree[i]);
 	}
-	for (let i = count - 1; i >= 0; i--) {
-		tree[i].code = tree[tree[i].father].code + '0';
-		}
-	for (let i = count - 1; i >= 0; i--) {
-		if (tree[i].father == count) {
-			tree[i].code = tree[count].code + '1';
-		}
-		break;
-	}
-	tree[mini_index].code = tree[tree[mini_index].father].code + '1';
 	for (let i = 0; i < count; i++) {
 		answer += tree[i].letter + ' ' + tree[i].code + '\n';
 		alphCode[tree[i].letter] = tree[i].code;

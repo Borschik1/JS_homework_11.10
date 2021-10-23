@@ -15,9 +15,6 @@ for (let i = 0; i < inputDataCode.length; i++) {
 		continue;
 	} else if (inputDataCode.charAt(i) == '\n') {
 		alphCode[code] = letter;
-		if (code.length > maxi) {
-			maxi = code.length;
-		}
 		code = '';
 		letter = '';
 		it_letter = true;
@@ -29,13 +26,12 @@ for (let i = 0; i < inputDataCode.length; i++) {
 		code += inputDataCode.charAt(i);
 	}
 }
+alphCode[code] = letter;
 code = '';
 let answer = '';
-let count = 0;
 for (let i = 0; i < inputDataString.length; i++) {
 	code += inputDataString.charAt(i);
-	count++;
-	if (inputDataString.charAt(i) == '0' || count == maxi) {
+	if (alphCode[code] != undefined) {
 		answer += alphCode[code];
 		code = '';
 		count = 0;
