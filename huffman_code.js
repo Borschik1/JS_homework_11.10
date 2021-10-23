@@ -20,7 +20,7 @@ for (let i = 0; i < inputData.length; i++) {
 }
 let tree = new Array();
 let count = 0;
-let mini = 100000000000000000, premini = 100000000000000000;
+let mini = Number.POSITIVE_INFINITY, premini = Number.POSITIVE_INFINITY;
 let mini_index = 0, premini_index = 0;
 for (i in alph) {
 	let n = new Node(i, alph[i], false, null, '');
@@ -44,7 +44,7 @@ if (count == 1) {
 	tree[premini_index].used = true;
 	tree[premini_index].father = count;
 	for (let i = 0; i < count - 2; i++) {
-		let mini = 100000000000000000;
+		let mini = Number.POSITIVE_INFINITY;
 		let mini_index = 0;
 		for (let j = 0; j < count; j++) {
 			if (!tree[j].used && tree[j].freq <= mini) {
